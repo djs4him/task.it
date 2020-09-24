@@ -1,0 +1,12 @@
+{
+    "09.22.2020": [
+        {"checked": false, "label": "Fix all the stuffs.", "comment": ""},
+        {"checked": true, "label": "Fix the stuffs more.", "comment": ""},
+        {"checked": false, "label": "Fix every stuff.", "comment": ""}
+    ],
+    "09.23.2020": [
+        {"checked": false, "label": "Fix all the things.", "comment": ""},
+        {"checked": true, "label": "Fix the things more.", "comment": ""},
+        {"checked": false, "label": "Fix everything.", "comment": ""}
+    ]
+}

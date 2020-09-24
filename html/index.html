@@ -7,12 +7,12 @@
         <link rel="stylesheet" href="../css/styles.css">
         <script src="../js/script.js"></script>
     </head>
-    <body>
+    <body onload="loadDataStore()">
         <button onclick="toggleHeaders()"><div class="header" id="yesterdayHeader">Yesterday</div></button>
         <div id="yesterdayItems"></div>
-        <div class="add-item"><button onclick="addItem(false)"><img src="../img/new.png"></a></div>
+        <div class="add-item"><button onclick="addItem(false, null)"><img src="../img/new.png"></a></div>
         <button onclick="toggleHeaders()"><div class="header" id="todayHeader">Today</div></button>
         <div id="todayItems"></div>
-        <div class="add-item"><button onclick="addItem(true)"><img src="../img/new.png"></a></div>
+        <div class="add-item"><button onclick="addItem(true, null)"><img src="../img/new.png"></a></div>
     </body>
 </html>

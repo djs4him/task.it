@@ -1,3 +1,4 @@
+let dataStore = require('../data/store.json');
 let numItems = 0;
 
 function toggleHeaders() {
@@ -7,25 +8,25 @@ function toggleHeaders() {
         let yesterday = new Date();
         yesterday.setDate(today.getDate() - 1);
 
-        setElementToDate("todayHeader", today);
-        setElementToDate("yesterdayHeader", yesterday);
+        document.getElementById("todayHeader").innerHTML = getDateString(today);
+        document.getElementById("yesterdayHeader").innerHTML = getDateString(yesterday);
     } else {
         document.getElementById("todayHeader").innerHTML = "Today";
         document.getElementById("yesterdayHeader").innerHTML = "Yesterday";
     }
 }
 
-function setElementToDate(element, date) {
+function getDateString(date) {
     let month = (date.getMonth() + 1).toString();
     month = month.length === 2 ? month : "0" + month;
 
     let day = date.getDate().toString();
     day = day.length === 2 ? day : "0" + day;
 
-    document.getElementById(element).innerHTML = month + "." + day + "." + date.getFullYear();
+    return month + "." + day + "." + date.getFullYear();
 }
 
-function addItem(isToday) {
+function addItem(isToday, item) {
     numItems++;
 
     let input = document.createElement("input");
@@ -47,6 +48,12 @@ function addItem(isToday) {
     div.className = "list-item";
 
     let divName = isToday ? "todayItems" : "yesterdayItems";
+
+    if(item != null) {
+        input.value = item.label;
+        checkbox.checked = item.checked;
+        handleCheckboxToggle(checkbox, input);
+    }
 
     let leftDiv = document.createElement("div");
     leftDiv.className = "left-div";
@@ -79,4 +86,16 @@ function handleCheckboxToggle(checkbox, input) {
     } else {
         input.classList.remove("fade-out");
     }
+}
+
+function loadDataStore() {
+    let today = new Date();
+    let yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    let todayString = getDateString(today);
+    let yesterdayString = getDateString(yesterday);
+
+    dataStore[todayString].forEach(i => addItem(true, i));
+    dataStore[yesterdayString].forEach(i => addItem(false, i));
 }
