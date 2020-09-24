@@ -1,5 +1,4 @@
-let numYesterdayItems = 0;
-let numTodayItems = 0;
+let numItems = 0;
 
 function toggleHeaders() {
     let text = document.getElementById("todayHeader").innerHTML;
@@ -27,8 +26,16 @@ function setElementToDate(element, date) {
 }
 
 function addItem(isToday) {
+    numItems++;
+
+    let input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "Finish all the things";
+
     let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.id = "item_" + numItems;
+    checkbox.onchange = e => { handleCheckboxToggle(checkbox, input); };
 
     let img = document.createElement("img");
     img.src = "../img/memo.png";
@@ -36,25 +43,10 @@ function addItem(isToday) {
     let link = document.createElement("a");
     link.appendChild(img);
 
-    let input = document.createElement("input");
-    input.type = "text";
-
     let div = document.createElement("div");
     div.className = "list-item";
 
-    let divName;
-
-    if(isToday) {
-        divName = "todayItems";
-        numTodayItems++;
-        checkbox.id = "today_item_" + numTodayItems;
-        input.placeholder = "finish item " + numTodayItems;
-    } else {
-        divName = "yesterdayItems";
-        numYesterdayItems++;
-        checkbox.id = "yesterday_item_" + numYesterdayItems;
-        input.placeholder = "finish item " + numYesterdayItems;
-    }
+    let divName = isToday ? "todayItems" : "yesterdayItems";
 
     let leftDiv = document.createElement("div");
     leftDiv.className = "left-div";
@@ -72,4 +64,19 @@ function addItem(isToday) {
     div.appendChild(rightDiv);
     div.appendChild(rightMargin);
     document.getElementById(divName).appendChild(div);
+
+    input.focus();
+    input.onblur = e => {
+        if(input.value === "") {
+            document.getElementById(divName).removeChild(div);
+        }
+    };
+}
+
+function handleCheckboxToggle(checkbox, input) {
+    if(checkbox.checked) {
+        input.classList.add("fade-out");
+    } else {
+        input.classList.remove("fade-out");
+    }
 }

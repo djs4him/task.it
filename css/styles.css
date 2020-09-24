@@ -69,6 +69,7 @@ div.add-item img:hover {
 }
 
 div.list-item img:hover {
+    cursor: pointer;
     filter: drop-shadow(0px 0px 4px orange);
 }
 
@@ -108,17 +109,23 @@ div.list-item a {
     margin-right: 6px;
 }
 
+input[type=checkbox]:hover {
+    cursor: pointer;
+}
+
+.fade-out,
 input[type=checkbox]:checked ~ a {
-    animation-name: strike-fade;
+    text-decoration: line-through;
+    animation-name: fade-out;
     animation-duration: 1s;
     animation-fill-mode: forwards;
 }
 
-@keyframes strike-fade {
+@keyframes fade-out {
     0% {
         opacity: 1;
     }
     100% {
-        opacity: 0.5;
+        opacity: 0.3;
     }
 }
