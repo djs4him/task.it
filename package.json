@@ -1,0 +1,14 @@
+{
+  "name": "task-it",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Daniel Standish",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^10.1.2"
+  }
+}

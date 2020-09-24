@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+        <title>{task.it}</title>
+        <link rel="stylesheet" href="../css/styles.css">
+        <script src="../js/script.js"></script>
+    </head>
+    <body>
+        <button onclick="toggleHeaders()"><div class="header" id="yesterdayHeader">Yesterday</div></button>
+        <div id="yesterdayItems"></div>
+        <div class="add-item"><button onclick="addItem(false)"><img src="../img/new.png"></a></div>
+        <button onclick="toggleHeaders()"><div class="header" id="todayHeader">Today</div></button>
+        <div id="todayItems"></div>
+        <div class="add-item"><button onclick="addItem(true)"><img src="../img/new.png"></a></div>
+    </body>
+</html>
