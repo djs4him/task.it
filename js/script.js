@@ -33,7 +33,7 @@ function getDateString(date) {
 function addItem(isToday, uuid) {
     uuid = uuid == null ? uuidv4() : uuid; // if a new item, generate a UUID
     let itemDay = isToday ? currDayString : prevDayString;
-    let item = isToday ? dataStore[itemDay][uuid] : dataStore[itemDay][uuid];
+    let item = dataStore[itemDay] == null ? null : dataStore[itemDay][uuid];
 
     let input = document.createElement("input");
     input.type = "text";
@@ -83,6 +83,7 @@ function addItem(isToday, uuid) {
             label: "",
             comment: ""
         }
+        if(dataStore[itemDay] == null) { dataStore[itemDay] = {}; }
         dataStore[itemDay][uuid] = newItem;
         persistToFile();
     }
@@ -129,8 +130,14 @@ function initPrevDay() {
     return getDateString(prevDay);
 }
 
+function initNextDay() {
+    let nextDay = new Date();
+    nextDay.setDate(nextDay.getDate() + 1);
+    return getDateString(nextDay);
+}
+
 function loadDataStore() {
-    Object.keys(dataStore[currDayString]).forEach(i => addItem(true, i));
-    Object.keys(dataStore[prevDayString]).forEach(i => addItem(false, i));
+    if(dataStore[currDayString] != null) { Object.keys(dataStore[currDayString]).forEach(i => addItem(true, i)); }
+    if(dataStore[prevDayString] != null) { Object.keys(dataStore[prevDayString]).forEach(i => addItem(false, i)); }
     document.activeElement.blur(); // deselect the last item
 }
