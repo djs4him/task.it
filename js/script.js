@@ -1,5 +1,9 @@
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 let dataStore = require('../data/store.json');
-let numItems = 0;
+
+let currDayString = initCurrDay();
+let prevDayString = initPrevDay();
 
 function toggleHeaders() {
     let text = document.getElementById("todayHeader").innerHTML;
@@ -8,8 +12,8 @@ function toggleHeaders() {
         let yesterday = new Date();
         yesterday.setDate(today.getDate() - 1);
 
-        document.getElementById("todayHeader").innerHTML = getDateString(today);
-        document.getElementById("yesterdayHeader").innerHTML = getDateString(yesterday);
+        document.getElementById("todayHeader").innerHTML = currDayString;
+        document.getElementById("yesterdayHeader").innerHTML = prevDayString;
     } else {
         document.getElementById("todayHeader").innerHTML = "Today";
         document.getElementById("yesterdayHeader").innerHTML = "Yesterday";
@@ -26,8 +30,10 @@ function getDateString(date) {
     return month + "." + day + "." + date.getFullYear();
 }
 
-function addItem(isToday, item) {
-    numItems++;
+function addItem(isToday, uuid) {
+    uuid = uuid == null ? uuidv4() : uuid; // if a new item, generate a UUID
+    let itemDay = isToday ? currDayString : prevDayString;
+    let item = isToday ? dataStore[itemDay][uuid] : dataStore[itemDay][uuid];
 
     let input = document.createElement("input");
     input.type = "text";
@@ -35,8 +41,7 @@ function addItem(isToday, item) {
 
     let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.id = "item_" + numItems;
-    checkbox.onchange = e => { handleCheckboxToggle(checkbox, input); };
+    checkbox.onchange = e => { handleCheckboxToggle(checkbox, input, uuid, true, itemDay); }
 
     let img = document.createElement("img");
     img.src = "../img/memo.png";
@@ -52,7 +57,7 @@ function addItem(isToday, item) {
     if(item != null) {
         input.value = item.label;
         checkbox.checked = item.checked;
-        handleCheckboxToggle(checkbox, input);
+        handleCheckboxToggle(checkbox, input, uuid, false, itemDay);
     }
 
     let leftDiv = document.createElement("div");
@@ -72,30 +77,59 @@ function addItem(isToday, item) {
     div.appendChild(rightMargin);
     document.getElementById(divName).appendChild(div);
 
+    if(item == null) {
+        let newItem = {
+            checked: false,
+            label: "",
+            comment: ""
+        }
+        dataStore[itemDay][uuid] = newItem;
+        persistToFile();
+    }
+
     input.focus();
     input.onblur = e => {
         if(input.value === "") {
             document.getElementById(divName).removeChild(div);
+            delete dataStore[itemDay][uuid];
+            persistToFile();
+        } else {
+            persistField(itemDay, uuid, "label", input.value);
         }
     };
 }
 
-function handleCheckboxToggle(checkbox, input) {
+function handleCheckboxToggle(checkbox, input, uuid, persist, date) {
     if(checkbox.checked) {
         input.classList.add("fade-out");
     } else {
         input.classList.remove("fade-out");
     }
+    if(persist) { persistField(date, uuid, "checked", checkbox.checked); }
+}
+
+function persistField(date, uuid, key, value) {
+    dataStore[date][uuid][key] = value;
+    persistToFile();
+}
+
+function persistToFile() {
+    fs.writeFile('./data/store.json', JSON.stringify(dataStore), err => {
+        if(err != null) { alert(err); }
+    });
+}
+
+function initCurrDay() {
+    return getDateString(new Date());
+}
+
+function initPrevDay() {
+    let prevDay = new Date();
+    prevDay.setDate(prevDay.getDate() - 1);
+    return getDateString(prevDay);
 }
 
 function loadDataStore() {
-    let today = new Date();
-    let yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    let todayString = getDateString(today);
-    let yesterdayString = getDateString(yesterday);
-
-    dataStore[todayString].forEach(i => addItem(true, i));
-    dataStore[yesterdayString].forEach(i => addItem(false, i));
+    Object.keys(dataStore[currDayString]).forEach(i => addItem(true, i));
+    Object.keys(dataStore[prevDayString]).forEach(i => addItem(false, i));
 }
