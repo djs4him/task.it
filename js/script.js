@@ -132,4 +132,5 @@ function initPrevDay() {
 function loadDataStore() {
     Object.keys(dataStore[currDayString]).forEach(i => addItem(true, i));
     Object.keys(dataStore[prevDayString]).forEach(i => addItem(false, i));
+    document.activeElement.blur(); // deselect the last item
 }
