@@ -18,7 +18,6 @@ button {
     border: none;
     outline: none;
     padding: none;
-    height: 34px;
     margin-bottom: 10px;
 }
 
@@ -104,6 +103,22 @@ div.right-margin {
     min-width: 10px;
 }
 
+div.bottom-div-collapsed {
+    margin-top: -10px;
+    border: none;
+    height: 0px;
+    font-size: 0px;
+}
+
+div.bottom-div-expanded {
+    margin-top: -10px;
+    display: block;
+    min-height: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    padding-left: 5px;
+}
+
 div.list-item a {
     margin-left: 6px;
     margin-right: 6px;
@@ -173,8 +188,8 @@ input[type=checkbox]:hover {
 }
 
 .fade-out,
-input[type=checkbox]:checked ~ a {
-    text-decoration: line-through;
+input[type=checkbox]:checked ~ button {
+    /*text-decoration: line-through;*/
     animation-name: fade-out;
     animation-duration: 1s;
     animation-fill-mode: forwards;
@@ -187,7 +202,7 @@ input[type=checkbox]:checked ~ a {
 
 @keyframes fade-out {
     0% { opacity: 1.0; }
-    100% { opacity: 0.3; }
+    100% { opacity: 0.4; }
 }
 
 @keyframes expand {

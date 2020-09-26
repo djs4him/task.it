@@ -114,8 +114,24 @@ function addItem(isToday, uuid) {
     let img = document.createElement("img");
     img.src = "../img/memo.png";
 
-    let link = document.createElement("a");
-    link.appendChild(img);
+    let bottomDiv = document.createElement("div");
+    bottomDiv.className = "bottom-div-collapsed";
+    bottomDiv.setAttribute("contenteditable", "");
+    bottomDiv.onblur = e => { handleComment(bottomDiv.textContent, uuid, itemDay); }
+
+    let comment = document.createElement("button");
+    comment.appendChild(img);
+    comment.setAttribute("isOn", "true");
+    comment.onclick = e => { 
+        if(comment.getAttribute("isOn") === "true") {
+            bottomDiv.className = "bottom-div-expanded";
+            comment.setAttribute("isOn", "false");
+            bottomDiv.textContent = item.comment;
+        } else {
+            bottomDiv.className = "bottom-div-collapsed";
+            comment.setAttribute("isOn", "true");
+        }
+     }
 
     let div = document.createElement("div");
     div.className = "list-item";
@@ -131,7 +147,7 @@ function addItem(isToday, uuid) {
     let leftDiv = document.createElement("div");
     leftDiv.className = "left-div";
     leftDiv.appendChild(checkbox);
-    leftDiv.appendChild(link);
+    leftDiv.appendChild(comment);
 
     let rightMargin = document.createElement("div");
     rightMargin.className = "right-margin";
@@ -143,6 +159,7 @@ function addItem(isToday, uuid) {
     div.appendChild(leftDiv);
     div.appendChild(rightDiv);
     div.appendChild(rightMargin);
+    div.appendChild(bottomDiv);
     document.getElementById(divName).appendChild(div);
 
     if(item == null) {
@@ -166,6 +183,10 @@ function addItem(isToday, uuid) {
             persistField(itemDay, uuid, "label", input.value);
         }
     };
+}
+
+function handleComment(text, uuid, date) {
+    persistField(date, uuid, "comment", text);
 }
 
 function handleCheckboxToggle(checkbox, input, uuid, persist, date) {
