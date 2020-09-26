@@ -5,18 +5,86 @@ let dataStore = require('../data/store.json');
 let currDayString = initCurrDay();
 let prevDayString = initPrevDay();
 
-function toggleHeaders() {
-    let text = document.getElementById("todayHeader").innerHTML;
-    if(text === "Today") {
-        let today = new Date();
-        let yesterday = new Date();
-        yesterday.setDate(today.getDate() - 1);
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        document.getElementById("todayHeader").innerHTML = currDayString;
-        document.getElementById("yesterdayHeader").innerHTML = prevDayString;
+function stepBack() {
+    let currDate = new Date(currDayString);
+    let prevDate = new Date(prevDayString);
+
+    currDate.setDate(currDate.getDate() - 1);
+    prevDate.setDate(prevDate.getDate() - 1);
+
+    currDayString = getDateString(currDate);
+    prevDayString = getDateString(prevDate);
+
+    refreshHeaders();
+    loadDataStore();
+}
+
+function stepForward() {
+    let currDate = new Date(currDayString);
+    let prevDate = new Date(prevDayString);
+
+    currDate.setDate(currDate.getDate() + 1);
+    prevDate.setDate(prevDate.getDate() + 1);
+
+    currDayString = getDateString(currDate);
+    prevDayString = getDateString(prevDate);
+
+    refreshHeaders();
+    loadDataStore();
+}
+
+function displayHeaderDays() {
+    const today = new Date();
+    let tomorrow = new Date();
+    let yesterday = new Date();
+
+    tomorrow.setDate(today.getDate() + 1);
+    yesterday.setDate(today.getDate() - 1);
+
+    const currDate = new Date(currDayString);
+    const prevDate = new Date(prevDayString);
+    const todayString = getDateString(today);
+    const tomorrowString = getDateString(tomorrow);
+    const yesterdayString = getDateString(yesterday);
+
+    if(getDateString(currDate) === yesterdayString) {
+        document.getElementById("prevHeader").innerHTML = days[prevDate.getDay()];
+        document.getElementById("currHeader").innerHTML = "Yesterday";
+    } else if(getDateString(currDate) === todayString) {
+        document.getElementById("prevHeader").innerHTML = "Yesterday";
+        document.getElementById("currHeader").innerHTML = "Today";
+    } else if(getDateString(prevDate) === todayString) {
+        document.getElementById("prevHeader").innerHTML = "Today";
+        document.getElementById("currHeader").innerHTML = "Tomorrow";
+    } else if(getDateString(prevDate) === tomorrowString) {
+        document.getElementById("prevHeader").innerHTML = "Tomorrow";
+        document.getElementById("currHeader").innerHTML = days[currDate.getDay()];
     } else {
-        document.getElementById("todayHeader").innerHTML = "Today";
-        document.getElementById("yesterdayHeader").innerHTML = "Yesterday";
+        document.getElementById("prevHeader").innerHTML = days[prevDate.getDay()];
+        document.getElementById("currHeader").innerHTML = days[currDate.getDay()];
+    }
+}
+
+function displayHeaderDates() {
+    document.getElementById("currHeader").innerHTML = currDayString;
+    document.getElementById("prevHeader").innerHTML = prevDayString;
+}
+
+function toggleHeaders() {
+    if(document.getElementById("currHeader").innerHTML.includes(".")) {
+        displayHeaderDays();
+    } else {
+        displayHeaderDates();
+    }
+}
+
+function refreshHeaders() {
+    if(document.getElementById("currHeader").innerHTML.includes(".")) {
+        displayHeaderDates();
+    } else {
+        displayHeaderDays();
     }
 }
 
@@ -52,7 +120,7 @@ function addItem(isToday, uuid) {
     let div = document.createElement("div");
     div.className = "list-item";
 
-    let divName = isToday ? "todayItems" : "yesterdayItems";
+    let divName = isToday ? "currItems" : "prevItems";
 
     if(item != null) {
         input.value = item.label;
@@ -137,6 +205,8 @@ function initNextDay() {
 }
 
 function loadDataStore() {
+    document.getElementById("currItems").innerHTML = '';
+    document.getElementById("prevItems").innerHTML = '';
     if(dataStore[currDayString] != null) { Object.keys(dataStore[currDayString]).forEach(i => addItem(true, i)); }
     if(dataStore[prevDayString] != null) { Object.keys(dataStore[prevDayString]).forEach(i => addItem(false, i)); }
     document.activeElement.blur(); // deselect the last item

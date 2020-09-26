@@ -8,11 +8,17 @@
         <script src="../js/script.js"></script>
     </head>
     <body onload="loadDataStore()">
-        <button onclick="toggleHeaders()"><div class="header" id="yesterdayHeader">Yesterday</div></button>
-        <div id="yesterdayItems"></div>
+        <div class="toolbar" id="toolbar">
+            <button id="goPrev"><img src="../img/left.png" onclick="stepBack()"></button>
+            <button id="goNext"><img src="../img/right.png" onclick="stepForward()"></button>
+            <input type="text">
+            <button id="search"><img src="../img/search.png"></button>
+        </div>
+        <button onclick="toggleHeaders()"><div class="header" id="prevHeader">Yesterday</div></button>
+        <div id="prevItems"></div>
         <div class="add-item"><button onclick="addItem(false, null)"><img src="../img/new.png"></a></div>
-        <button onclick="toggleHeaders()"><div class="header" id="todayHeader">Today</div></button>
-        <div id="todayItems"></div>
+        <button onclick="toggleHeaders()"><div class="header" id="currHeader">Today</div></button>
+        <div id="currItems"></div>
         <div class="add-item"><button onclick="addItem(true, null)"><img src="../img/new.png"></a></div>
     </body>
 </html>
