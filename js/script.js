@@ -112,14 +112,14 @@ function addItem(isToday, uuid) {
     checkbox.onchange = e => { handleCheckboxToggle(checkbox, input, uuid, true, itemDay); }
 
     let img = document.createElement("img");
-    img.src = "../img/memo.png";
+    img.src = (item == null || item.comment == "") ? "../img/memo.png" : "../img/memo-lit.png";
 
+    let comment = document.createElement("button");
     let bottomDiv = document.createElement("div");
     bottomDiv.className = "bottom-div-collapsed";
     bottomDiv.setAttribute("contenteditable", "");
-    bottomDiv.onblur = e => { handleComment(bottomDiv.textContent, uuid, itemDay); }
-
-    let comment = document.createElement("button");
+    bottomDiv.onblur = e => { handleComment(bottomDiv.textContent.trim(), uuid, itemDay, img); }
+    
     comment.appendChild(img);
     comment.setAttribute("isOn", "true");
     comment.onclick = e => { 
@@ -185,8 +185,9 @@ function addItem(isToday, uuid) {
     };
 }
 
-function handleComment(text, uuid, date) {
+function handleComment(text, uuid, date, img) {
     persistField(date, uuid, "comment", text);
+    img.src = text !== "" ? "../img/memo-lit.png" : "../img/memo.png";
 }
 
 function handleCheckboxToggle(checkbox, input, uuid, persist, date) {

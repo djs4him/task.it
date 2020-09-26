@@ -69,7 +69,7 @@ div.add-item img:hover {
 
 div.list-item img:hover {
     cursor: pointer;
-    filter: drop-shadow(0px 0px 4px orange);
+    filter: drop-shadow(0px 0px 4px white);
 }
 
 div.list-item {
@@ -189,7 +189,6 @@ input[type=checkbox]:hover {
 
 .fade-out,
 input[type=checkbox]:checked ~ button {
-    /*text-decoration: line-through;*/
     animation-name: fade-out;
     animation-duration: 1s;
     animation-fill-mode: forwards;
