@@ -220,15 +220,38 @@ function initPrevDay() {
     return getDateString(prevDay);
 }
 
-function initNextDay() {
-    let nextDay = new Date();
-    nextDay.setDate(nextDay.getDate() + 1);
-    return getDateString(nextDay);
+function copyYesterdayIncomplete() {
+    let today = new Date();
+    let yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    let todayString = getDateString(today);
+    let yesterdayString = getDateString(yesterday);
+
+    if(todayString in dataStore) { return; } 
+    if(!(todayString in dataStore)) { dataStore[todayString] = {}; }
+
+    let hasChanged = false;
+    Object.keys(dataStore[yesterdayString]).forEach(uuid => {
+        if(!dataStore[yesterdayString][uuid].checked) {
+            dataStore[todayString][uuidv4()] = {
+                checked: false,
+                label: dataStore[yesterdayString][uuid].label,
+                comment: dataStore[yesterdayString][uuid].comment
+            };
+            hasChanged = true;
+        }
+    });
+
+    if(hasChanged) { persistToFile();}
 }
 
 function loadDataStore() {
     document.getElementById("currItems").innerHTML = '';
     document.getElementById("prevItems").innerHTML = '';
+    
+    copyYesterdayIncomplete();
+
     if(dataStore[currDayString] != null) { Object.keys(dataStore[currDayString]).forEach(i => addItem(true, i)); }
     if(dataStore[prevDayString] != null) { Object.keys(dataStore[prevDayString]).forEach(i => addItem(false, i)); }
     document.activeElement.blur(); // deselect the last item
